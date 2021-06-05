@@ -13,3 +13,5 @@ yarn build
 ```
 
 to bundle your application
+
+# lemmatization list download from https://github.com/michmech/lemmatization-lists

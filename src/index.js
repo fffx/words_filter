@@ -1,3 +1,4 @@
+import Lemmatization from "./lemmatization";
 
 const userInputSource = document.getElementById("userInputSource")
 const userInputFilter = document.getElementById("userInputFilter")
@@ -20,10 +21,11 @@ String.prototype.scan = function (regexp) {
   return result;
 };
 
-
+const lemmatization = new Lemmatization()
+console.log("went", lemmatization.lemma("went"))
 document.getElementById("save").onclick = () => {
-  let inputWords = new Set(userInputSource.value.scan(/\w+/g))
-  let filterWords = new Set(userInputFilter.value.scan(/\w+/g))
+  let inputWords = new Set(userInputSource.value.scan(/\w+/g).map( x => lemmatization.lemma(x) ) )
+  let filterWords = new Set(userInputFilter.value.scan(/\w+/g).map( x => lemmatization.lemma(x) ) )
 
   const results = Array.from(inputWords).filter(item => !filterWords.has(item))
   console.log({inputWords, filterWords, results})
