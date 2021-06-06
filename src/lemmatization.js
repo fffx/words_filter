@@ -10,7 +10,6 @@ class Lemmatization {
   }
 
   lemma(word){
-    console.log(this.lemmasMap)
     return this.lemmasMap.get(word) || word
   }
 }
