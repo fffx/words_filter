@@ -11,7 +11,7 @@ const stylesHandler = 'style-loader';
 
 
 const config = {
-    entry: './src/index.js',
+    entry: './src/index.jsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
     },
