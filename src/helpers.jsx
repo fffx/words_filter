@@ -64,3 +64,9 @@ export const extractTxtFromPdf = (readResult) => {
   });
 
 }
+
+
+export function fetchFile(url){
+  url = "https://raw.githubusercontent.com/fffx/Wiktionary-Frequency-lists-txt/main/TV-2006-top-10000.txt";
+  return fetch(url).then( res => res.text() )
+}

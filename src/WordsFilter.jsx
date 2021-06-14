@@ -1,4 +1,5 @@
 import React, { Component} from "react";
+import ExtractConfig from "./components/ExtractConfig.jsx"
 import Lemmatization from "./lemmatization";
 import * as Helpers from "./helpers.jsx";
 
@@ -12,11 +13,6 @@ export default class WordsFilter extends Component {
     }
   }
 
-  // componentDidMount(){
-
-  // }
-
-
   // https://en.wikipedia.org/wiki/Longest_word_in_English
   // https://reference.wolfram.com/language/example/FitWordLengthDataToDistributions.html.zh
   // https://pdf.sciencedirectassets.com/273276/1-s2.0-S0019995800X01489/1-s2.0-S0019995858902298/main.pdf
@@ -27,9 +23,11 @@ export default class WordsFilter extends Component {
     return new RegExp(`[a-zA-Z]+-?[a-z]{${minLen},${maxLen}}`, 'g')
   };
 
+  userInputFilter = () => document.getElementById("userInputFilter")
+
   onSaveBtnClick = () => {
     const userInputSource = document.getElementById("userInputSource")
-    const userInputFilter = document.getElementById("userInputFilter")
+    const userInputFilter = this.userInputFilter()
     const filterResults = document.getElementById("filterResults")
 
     // console.log("went", lemmatization.lemma("went"))
@@ -73,7 +71,7 @@ export default class WordsFilter extends Component {
     let inputWords  = new Set(Helpers.scan(userInputSource.value, scanRegex).map( x => {
       return lemmatization.lemma(x.toLowerCase())
     }))
-    let filterWords = new Set(Helpers.scan(userInputFilter.value, scanRegex).map( x => { 
+    let filterWords = new Set(Helpers.scan(this.userInputFilter().value, scanRegex).map( x => { 
       return lemmatization.lemma(x.toLowerCase()) 
     }))
   
@@ -81,6 +79,11 @@ export default class WordsFilter extends Component {
     // console.log({inputWords, filterWords, results})
     document.getElementById("filterResults").value = results.join(" ")
   };
+
+
+  updateExtractConfig = () => {
+
+  }
 
   
   render(){
@@ -91,71 +94,53 @@ export default class WordsFilter extends Component {
           <div className="card-header"> 输入： </div>
           <div className="card-body">
               <div className="row">
-                  <div className="col-4">
-                      <div className="mb-3">
-                          <label htmlFor="formFile" className="form-label">上传文件(txt)</label>
-                          <input className="form-control" type="file" id="formFile"/>
+                  <div className="col-12">
+                      <div className="mb-3 row">
+                          <label htmlFor="formFile" className="form-label col-sm-12 col-lg-2 col-form-label">上传文件(pdf/txt): </label>
+                          <div className="col-lg-10 col-12">
+                            <input className="form-control" type="file" id="formFile"/>
+                          </div>
                       </div>
                   </div>
-                  <div className="col-8"> 
+                  <div className="col-12"> 
                       <textarea className="form-control" id="userInputSource" rows="6" placeholder="或者黏贴文本"></textarea>        
                   </div>
               </div>
           </div>
       </div>
-      <div className="row pt-3">
-          <div className="col-6">
-              <div className="card">
-                  <div className="card-header"> 过滤: </div>
-                  <div className="card-body">
-                      <div className="row">
-                          <div className="col-12">
-                              <textarea className="form-control" id="userInputFilter" rows="9" placeholder="... 过滤你不想背的单词"></textarea>
+
+      <div className="container pt-2"> 
+        <div className="row">
+          <nav>
+            <div className="nav nav-tabs" role="tablist">
+              <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#output-tab" type="button" aria-selected="true">输出</button>
+              <button className="nav-link"        data-bs-toggle="tab" data-bs-target="#config-tab" type="button">设置</button>
+            </div>
+          </nav>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            <div className="tab-content" id="main-tab-content">
+              <div className="tab-pane fade show active" id="output-tab" role="tabpanel">
+                <div className="row pt-3">
+                  <div className="card">
+                      <div className="card-body">
+                          <div className="col-8">
+                              <button className="btn btn-primary" id="save" onClick={this.onSaveBtnClick}> 保存 </button>
                           </div>
+                          <textarea className="form-control mt-1" id="filterResults" placeholder="结果输出" rows="9"></textarea>
                       </div>
-                      {/* TODO words list */}
-                      <div className="row pt-3 d-none">
-                          <ul className="list-group">
-                              <li className="list-group-item">An item</li>
-                              <li className="list-group-item">A second item</li>
-                              <li className="list-group-item">A third item</li>
-                              <li className="list-group-item">A fourth item</li>
-                              <li className="list-group-item">And a fifth one</li>
-                          </ul>
-                      </div>
+                    </div>
                   </div>
+                </div>
+                <div className="tab-pane fade" id="config-tab" role="tabpanel"> 
+                  <ExtractConfig scanRegex={scanRegex}/>
+                </div>
               </div>
-          </div>
-          <div className="col-6">
-              <div className="card">
-                  <div className="card-header"> 操作: </div>
-                  <div className="card-body">
-                      <div className="col-8">
-                          <ol className="list-group list-group-numbered">
-                              <li className="list-group-item">
-                                单词提取正则
-                                <div className="input-group mb-3">
-                                  <span className="input-group-text">Regex:</span>
-                                  <input type="text" className="form-control" placeholder={scanRegex}/>
-                                </div>
-                              </li>
-                              <li>
-
-                                <div className="form-check form-switch">
-                                  <label className="form-check-label" htmlFor="flexSwitchCheckDefault">单词还原（went -> go)</label>
-                                  <input className="form-check-input" type="checkbox" />
-                                </div>
-
-                              </li>
-                          </ol>
-                          <button className="btn btn-primary" id="save" onClick={this.onSaveBtnClick}> 保存 </button>
-                      </div>
-                      <textarea className="form-control" id="filterResults" placeholder="结果输出" rows="9"></textarea>
-                  </div>
-              </div>
-          </div>
+            </div> {/* tabs end */}
+        </div>
       </div>
-
     </>
     )
   }
