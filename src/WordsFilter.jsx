@@ -23,6 +23,17 @@ export default class WordsFilter extends Component {
     return new RegExp(`[a-zA-Z]+-?[a-z]{${minLen},${maxLen}}`, 'g')
   };
 
+  updateScanRegex = (event) => {
+    let regex = null
+    try{
+      regex = new RegExp(event.target.value, 'g')
+    } catch(e){
+      console.log(e)
+    }
+    console.log({regex})
+    if(regex) this.setState({scanRegex: regex})
+  }
+
   userInputFilter = () => document.getElementById("userInputFilter")
 
   onSaveBtnClick = () => {
@@ -81,8 +92,8 @@ export default class WordsFilter extends Component {
   };
 
 
-  updateExtractConfig = () => {
-
+  componentDidUpdate(){
+    this.doFilter()
   }
 
   
@@ -135,7 +146,7 @@ export default class WordsFilter extends Component {
                   </div>
                 </div>
                 <div className="tab-pane fade" id="config-tab" role="tabpanel"> 
-                  <ExtractConfig scanRegex={scanRegex}/>
+                  <ExtractConfig scanRegex={scanRegex} updateScanRegex={this.updateScanRegex} />
                 </div>
               </div>
             </div> {/* tabs end */}
